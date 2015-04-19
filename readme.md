@@ -6,6 +6,8 @@ Painel administrativo em Code Igniter para fins estudantis !!!
 
 Logo após o clone do sistema crie um banco de dados.
 Renomeie os arquivos
+
+
     application/config/config.dist.php => config.php
     
     
