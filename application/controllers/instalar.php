@@ -96,7 +96,12 @@ class Instalar extends CI_Controller {
 			//conectar bd
 			$this->load->database();
 			$this->db->reconnect();
-			$this->db->query("USE ".$this->input->post('database'));
+
+			#######################################################
+			// DESCOMENTE A LINHA ABAIXO CASO TENHA ERRO DE DATABASE NAO SELECIONADA
+			//$this->db->query("USE ".$this->input->post('database'));
+            
+			########################################################
 			//criar tabelas
 			$sql_bd = "CREATE TABLE IF NOT EXISTS `auditoria` (
 			  `id` int(11) NOT NULL AUTO_INCREMENT,
