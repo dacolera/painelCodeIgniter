@@ -23,6 +23,30 @@ class Instalar extends CI_Controller {
 			//criar arquivos
 			$this->load->helper('file');
 
+			$file_bd = '<?php  if ( ! defined("BASEPATH")) exit("No direct script access allowed");
+				$active_group = "default";
+				$active_record = TRUE;
+				$db["default"]["hostname"] = "'.$this->input->post('hostname').'";
+				$db["default"]["username"] = "'.$this->input->post('username').'";
+				$db["default"]["password"] = "'.$this->input->post('password').'";
+				$db["default"]["database"] = "'.$this->input->post('database').'";
+				$db["default"]["dbdriver"] = "mysql";
+				$db["default"]["dbprefix"] = "";
+				$db["default"]["pconnect"] = FALSE;
+				$db["default"]["db_debug"] = TRUE;
+				$db["default"]["cache_on"] = FALSE;
+				$db["default"]["cachedir"] = "";
+				$db["default"]["char_set"] = "utf8";
+				$db["default"]["dbcollat"] = "utf8_general_ci";
+				$db["default"]["swap_pre"] = "";
+				$db["default"]["autoinit"] = TRUE;
+				$db["default"]["stricton"] = FALSE;
+			/* End of file database.php */
+			/* Location: ./application/config/database.php */
+			';
+			write_file('./application/config/database.php', trim($file_bd));
+
+
 			$file_config = '<?php  if ( ! defined("BASEPATH")) exit("No direct script access allowed");
 				$config["base_url"]	= "'.$this->input->post('url_base').'";
 				$config["index_page"] = "";
@@ -69,41 +93,16 @@ class Instalar extends CI_Controller {
 			/* Location: ./application/config/config.php */
 			';
 			write_file('./application/config/config.php', trim($file_config));
-			
-			$file_bd = '<?php  if ( ! defined("BASEPATH")) exit("No direct script access allowed");
-				$active_group = "default";
-				$active_record = TRUE;
-				$db["default"]["hostname"] = "'.$this->input->post('hostname').'";
-				$db["default"]["username"] = "'.$this->input->post('username').'";
-				$db["default"]["password"] = "'.$this->input->post('password').'";
-				$db["default"]["database"] = "'.$this->input->post('database').'";
-				$db["default"]["dbdriver"] = "mysql";
-				$db["default"]["dbprefix"] = "";
-				$db["default"]["pconnect"] = TRUE;
-				$db["default"]["db_debug"] = TRUE;
-				$db["default"]["cache_on"] = FALSE;
-				$db["default"]["cachedir"] = "";
-				$db["default"]["char_set"] = "utf8";
-				$db["default"]["dbcollat"] = "utf8_general_ci";
-				$db["default"]["swap_pre"] = "";
-				$db["default"]["autoinit"] = TRUE;
-				$db["default"]["stricton"] = FALSE;
-			/* End of file database.php */
-			/* Location: ./application/config/database.php */
-			';
-			write_file('./application/config/database.php', trim($file_bd));
 
 			//conectar bd
 			$this->load->database();
+
 			$this->db->reconnect();
 
-			#######################################################
-			// DESCOMENTE A LINHA ABAIXO CASO TENHA ERRO DE DATABASE NAO SELECIONADA
-			//$this->db->query("USE ".$this->input->post('database'));
-            
-			########################################################
+			$DBX = $this->input->post('database');
+
 			//criar tabelas
-			$sql_bd = "CREATE TABLE IF NOT EXISTS `auditoria` (
+			$sql_bd = "CREATE TABLE IF NOT EXISTS `{$DBX}`.`auditoria` (
 			  `id` int(11) NOT NULL AUTO_INCREMENT,
 			  `usuario` varchar(45) NOT NULL,
 			  `data_hora` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -113,8 +112,9 @@ class Instalar extends CI_Controller {
 			  PRIMARY KEY (`id`)
 			) ENGINE=InnoDB  DEFAULT CHARSET=latin1;";
 			$this->db->query($sql_bd);
-			
-			$sql_bd = "CREATE TABLE IF NOT EXISTS `midia` (
+
+
+			$sql_bd = "CREATE TABLE IF NOT EXISTS `{$DBX}`.`midia` (
 			  `id` int(11) NOT NULL AUTO_INCREMENT,
 			  `nome` varchar(45) NOT NULL,
 			  `descricao` varchar(255) NOT NULL,
@@ -123,7 +123,7 @@ class Instalar extends CI_Controller {
 			) ENGINE=InnoDB  DEFAULT CHARSET=latin1;";
 			$this->db->query($sql_bd);
 			
-			$sql_bd = "CREATE TABLE IF NOT EXISTS `paginas` (
+			$sql_bd = "CREATE TABLE IF NOT EXISTS `{$DBX}`.`paginas` (
 			  `id` int(11) NOT NULL AUTO_INCREMENT,
 			  `titulo` varchar(255) NOT NULL,
 			  `slug` varchar(255) NOT NULL,
@@ -132,7 +132,7 @@ class Instalar extends CI_Controller {
 			) ENGINE=InnoDB  DEFAULT CHARSET=latin1;";
 			$this->db->query($sql_bd);
 			
-			$sql_bd = "CREATE TABLE IF NOT EXISTS `settings` (
+			$sql_bd = "CREATE TABLE IF NOT EXISTS `{$DBX}`.`settings` (
 			  `id` int(11) NOT NULL AUTO_INCREMENT,
 			  `nome_config` varchar(255) NOT NULL,
 			  `valor_config` text NOT NULL,
@@ -140,7 +140,7 @@ class Instalar extends CI_Controller {
 			) ENGINE=InnoDB  DEFAULT CHARSET=latin1;";
 			$this->db->query($sql_bd);
 			
-			$sql_bd = "CREATE TABLE IF NOT EXISTS `usuarios` (
+			$sql_bd = "CREATE TABLE IF NOT EXISTS `{$DBX}`.`usuarios` (
 			  `id` int(11) NOT NULL AUTO_INCREMENT,
 			  `nome` varchar(100) NOT NULL,
 			  `email` varchar(100) NOT NULL,
@@ -159,7 +159,7 @@ class Instalar extends CI_Controller {
 				$dados["login"] = $this->input->post('user_login');
 				$dados["senha"] = md5($this->input->post('user_senha'));
 				$dados["adm"] = 1;
-				$usuario = $this->db->insert('usuarios', $dados);
+				$usuario = $this->db->insert("{$DBX}.usuarios", $dados);
 				if ($usuario == TRUE) redirect('instalar/sucesso');
 			endif;
 		endif;
