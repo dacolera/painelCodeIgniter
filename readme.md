@@ -19,7 +19,5 @@ Faca a instalacao acessando seudominio/instalar
     informacoes requeridas.
 
 
-    Se estiver recebendo erro de database nao selecionada descomente a
-    linha 102 do arquivo  application/controllers/instalar.php
 
     ENJOY !!!
