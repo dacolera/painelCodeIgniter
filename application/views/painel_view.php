@@ -70,6 +70,7 @@
 		<div class="row rodape">
 			<div class="twelve columns text-center">
 				{rodape}
+				<?php echo mailto('jurandir.dacol@catho.com','increva-se'); ?>
 			</div>
 		</div>
 		{footerinc}
